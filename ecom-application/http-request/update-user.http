@@ -1,0 +1,11 @@
+### ADD USER
+
+PUT http://localhost:8080/api/users/update/1
+Content-Type: application/json
+
+{
+  "firstName": "Tom",
+  "lastName": "Cruise"
+}
+
+###
