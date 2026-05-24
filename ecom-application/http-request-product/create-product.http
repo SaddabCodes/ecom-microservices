@@ -1,0 +1,13 @@
+### CREATE PRODUCT
+
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Office Ergonomic Chair",
+  "description": "Adjustable high-back chair with lumbar support and breathable fabric.",
+  "price": 3999.00,
+  "stockQuantity": 140,
+  "category": "Furniture",
+  "imageUrl": "https://example.com/images/ergonomic-office-chair.jpg"
+}

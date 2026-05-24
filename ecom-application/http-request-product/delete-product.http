@@ -1,0 +1,3 @@
+### DELTE PRODUCT
+
+DELETE http://localhost:8080/api/products/delete/5

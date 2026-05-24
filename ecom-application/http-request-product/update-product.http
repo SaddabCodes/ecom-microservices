@@ -1,0 +1,13 @@
+### UPDATE PRODUCT
+
+PUT http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Wireless Bluetooth Headphones",
+  "description": "Over-ear headphones with active noise cancellation and 30-hour battery life.",
+  "price": 1249.00,
+  "stockQuantity": 250,
+  "category": "Electronics",
+  "imageUrl": "https://example.com/images/wireless-bluetooth-headphones.jpg"
+}
