@@ -4,17 +4,16 @@ POST http://localhost:8080/api/users/add
 Content-Type: application/json
 
 {
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john.doe@example.com",
-  "phone": "+1-555-123-4567",
-  "role": "CUSTOMER",
+  "firstName": "Vikram",
+  "lastName": "Nair",
+  "email": "vikram.nair@example.com",
+  "phone": "+91-9345678901",
   "address": {
-    "street": "221B Baker Street",
-    "city": "London",
-    "state": "Greater London",
-    "country": "UK",
-    "zipcode": "NW1 6XE"
+    "street": "9 Marine Drive",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "country": "India",
+    "zipcode": "400020"
   }
 }
 
