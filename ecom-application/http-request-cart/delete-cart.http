@@ -1,0 +1,4 @@
+###
+
+DELETE http://localhost:8080/api/cart/item/2
+X-USER-ID: 1

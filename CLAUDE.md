@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a microservices workspace for an e-commerce platform. Currently contains one Spring Boot service (`ecom-application/`), with additional services expected as sibling directories at the repository root.
 
-**ecom-application** is a Spring Boot 4.0.6 REST API service using:
+**ecom-application** is a Spring Boot 4.0.6 REST API service using Java 25, with:
 - Spring Data JPA with MySQL (Hibernate auto-DDL enabled)
 - Lombok for boilerplate reduction
 - Standard layered architecture: Controller → Service → Repository → Entity
@@ -21,6 +21,8 @@ The service implements soft deletion patterns (entities have `active` boolean fl
 
 **Address**: Embedded entity owned by User, cascade-deleted when user is removed.
 
+**CartItem**: Cart line-item with many-to-one relationships to User and Product, storing quantity and price. Used for shopping cart management.
+
 Repository layer uses Spring Data JPA with custom query methods. Example: `ProductRepository.searchProducts()` uses JPQL to filter by active status, stock availability, and case-insensitive name matching.
 
 ## Development Commands
@@ -33,9 +35,14 @@ All commands run from `ecom-application/` directory. Use Maven wrapper (not syst
 # Windows: mvnw.cmd spring-boot:run
 ```
 
-**Run tests:**
+**Run all tests:**
 ```bash
 ./mvnw test
+```
+
+**Run a single test class:**
+```bash
+./mvnw test -Dtest=UserServiceTests
 ```
 
 **Build JAR:**
@@ -47,11 +54,12 @@ All commands run from `ecom-application/` directory. Use Maven wrapper (not syst
 
 ## Testing the API
 
-HTTP request files are organized in feature-specific folders:
+HTTP request files are organized in feature-specific folders under `ecom-application/`:
 - `http-request-user/` - User CRUD operations
 - `http-request-product/` - Product CRUD and search operations
+- `http-request-cart/` - Cart item management (add, delete)
 
-These `.http` files work with IntelliJ IDEA HTTP Client or VS Code REST Client extension. They target `http://localhost:8080/api/*` endpoints.
+These `.http` files work with IntelliJ IDEA HTTP Client or VS Code REST Client extension. They target `http://localhost:8080/api/*` endpoints. Cart endpoints require the `X-USER-ID` header to identify the user.
 
 ## Code Organization
 
