@@ -1,0 +1,6 @@
+### PLACE ORDER
+
+POST http://localhost:8080/api/orders
+X-USER-ID: 1
+
+###
