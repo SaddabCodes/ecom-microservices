@@ -3,9 +3,9 @@ spring:
     name: ecom-application
 
   datasource:
-    url: jdbc:mysql://localhost:3306/ecom_application
-    username: root
-    password: 1234
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:ecom_application}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:1234}
 
   jpa:
     show-sql: true
@@ -22,12 +22,14 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, info, metrics
+        include: health, info, metrics, loggers, beans, shutdown
     #        include: "*"
 
   endpoint:
     health:
       show-details: always
+    shutdown:
+      enabled: true
 
 info:
   app:
