@@ -1,10 +1,10 @@
-### ADD PRODUCT TO CARD
+### ADD PRODUCT TO CART
 
-POST http://localhost:8080/api/cart
+POST http://localhost:8083/api/cart
 Content-Type: application/json
 X-USER-ID: 1
 
 {
   "productId": 2,
-  "quantity": 5
+  "quantity": 10
 }

@@ -9,7 +9,6 @@ import com.sadcodes.ecommerce.order.model.OrderItem;
 import com.sadcodes.ecommerce.order.model.OrderStatus;
 import com.sadcodes.ecommerce.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,7 +21,6 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartService cartService;
-    private final UserRepository userRepository;
 
     public Optional<OrderResponse> createOrder(String userId) {
         // Validate for cart items
@@ -33,11 +31,11 @@ public class OrderService {
 
         // Validate for user
 
-        Optional<User> userOptional = userRepository.findById(Long.valueOf(userId));
-        if (userOptional.isEmpty()) {
-            return Optional.empty();
-        }
-        User user = userOptional.get();
+//        Optional<User> userOptional = userRepository.findById(Long.valueOf(userId));
+//        if (userOptional.isEmpty()) {
+//            return Optional.empty();
+//        }
+//        User user = userOptional.get();
 
         // Calculate total price
         BigDecimal totalPrice = cartItems.stream()
@@ -46,13 +44,13 @@ public class OrderService {
 
         // Create Oder
         Order order = new Order();
-        order.setUser(user);
+        order.setUserId(userId);
         order.setStatus(OrderStatus.CONFIRMED);
         order.setTotalAmount(totalPrice);
 
         List<OrderItem> orderItems = cartItems.stream()
                 .map(item -> new OrderItem(
-                        null, item.getProduct(), item.getQuantity(),
+                        null, item.getProductId(), item.getQuantity(),
                         item.getPrice(), order
                 )).toList();
         order.setItems(orderItems);
@@ -70,7 +68,7 @@ public class OrderService {
                 order.getItems().stream()
                         .map(orderItem -> new OrderItemDto(
                                 orderItem.getId(),
-                                orderItem.getProduct().getId(),
+                                orderItem.getProductId(),
                                 orderItem.getQuantity(),
                                 orderItem.getPrice(),
                                 orderItem.getPrice().multiply(new BigDecimal(orderItem.getQuantity()))
