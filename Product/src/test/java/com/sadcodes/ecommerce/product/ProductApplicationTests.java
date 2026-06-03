@@ -1,10 +1,10 @@
-package com.sadcodes.user;
+package com.sadcodes.ecommerce.product;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class UserApplicationTests {
+class ProductApplicationTests {
 
     @Test
     void contextLoads() {

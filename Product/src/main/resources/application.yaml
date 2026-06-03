@@ -1,10 +1,10 @@
 spring:
   application:
-    name: User
+    name: Product
 
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:ms_user_db}
-    username: ${DB_USERNAME:postgres}
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:ms_product_db}
+    username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:1234}
 
   jpa:
@@ -33,9 +33,9 @@ management:
 
 info:
   app:
-    name: User
+    name: Product
     version: 0.0.1
     owner: Saddab
 
 server:
-  port: 8082
+  port: 8081
