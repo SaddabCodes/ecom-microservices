@@ -1,6 +1,6 @@
 ### ADD USER
 
-POST http://localhost:8080/api/users/add
+POST http://localhost:8082/api/users/add
 Content-Type: application/json
 
 {

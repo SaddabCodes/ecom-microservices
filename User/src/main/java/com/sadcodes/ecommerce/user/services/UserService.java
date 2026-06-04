@@ -33,13 +33,13 @@ public class UserService {
         return mapToResponse(user);
     }
 
-    public Optional<UserResponse> fetchUser(Long id) {
+    public Optional<UserResponse> fetchUser(String id) {
         return userRepository.findById(id)
                 .map(user -> mapToResponse(user));
     }
 
     public boolean updateUser(Long id, UserRequest updatedUserRequest) {
-        return userRepository.findById(id)
+        return userRepository.findById(String.valueOf(id))
                 .map(existingUser -> {
                     updateUserFromRequest(existingUser, updatedUserRequest);
                     userRepository.save(existingUser);

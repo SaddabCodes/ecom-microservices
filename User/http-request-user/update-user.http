@@ -1,6 +1,6 @@
 ### ADD USER
 
-PUT http://localhost:8080/api/users/update/1
+PUT http://localhost:8082/api/users/update/1
 Content-Type: application/json
 
 {
