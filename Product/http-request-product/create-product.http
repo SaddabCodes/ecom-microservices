@@ -1,6 +1,6 @@
 ### CREATE PRODUCT
 
-POST http://localhost:8080/api/products
+POST http://localhost:8081/api/products
 Content-Type: application/json
 
 {

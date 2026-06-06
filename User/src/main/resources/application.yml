@@ -4,7 +4,7 @@ spring:
 
 
   mongodb:
-    host: ${DB_HOST:localhost}
+    host: ${DB_HOST:mongodb}
     database: ${DB_DATABASE:ms_user_db}
     port: ${DB_PORT:27017}
 

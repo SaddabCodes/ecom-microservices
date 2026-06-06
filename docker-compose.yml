@@ -1,0 +1,129 @@
+services:
+  # MongoDB for User Service
+  mongodb:
+    image: mongo:7.0
+    container_name: ms_mongodb
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_DATABASE: ms_user_db
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - ecom-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MySQL for Product Service
+  mysql:
+    image: mysql:8.0
+    container_name: ms_mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: ms_product_db
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - ecom-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PostgreSQL for Order Service
+  postgres:
+    image: postgres:18
+    container_name: ms_postgres
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: ms_order_db
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - ecom-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # User Service
+  user-service:
+    build:
+      context: ./User
+      dockerfile: Dockerfile
+    container_name: ms_user_service
+    ports:
+      - "8082:8082"
+    environment:
+      DB_HOST: mongodb
+      DB_PORT: 27017
+      DB_DATABASE: ms_user_db
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/ms_user_db
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - ecom-network
+    restart: unless-stopped
+
+  # Product Service
+  product-service:
+    build:
+      context: ./Product
+      dockerfile: Dockerfile
+    container_name: ms_product_service
+    ports:
+      - "8081:8081"
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: ms_product_db
+      DB_USERNAME: root
+      DB_PASSWORD: 1234
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - ecom-network
+    restart: unless-stopped
+
+  # Order Service
+  order-service:
+    build:
+      context: ./Order
+      dockerfile: Dockerfile
+    container_name: ms_order_service
+    ports:
+      - "8083:8083"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ms_order_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: 1234
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ecom-network
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+  mysql_data:
+  postgres_data:
+
+networks:
+  ecom-network:
+    driver: bridge
