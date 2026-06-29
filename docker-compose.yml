@@ -1,63 +1,20 @@
+# For local development, use the standalone database connections.
+# This docker-compose is configured for local databases running on the host machine.
+#
+# Required local setup:
+# - MongoDB on localhost:27017 (database: ms_user_db)
+# - MySQL on localhost:3306 (database: ms_product_db, user: root/1234)
+# - PostgreSQL on localhost:5433 (database: ms_order_db, user: postgres/1234)
+#
+# Start services individually with:
+#   cd User && ./mvnw spring-boot:run
+#   cd Product && ./mvnw spring-boot:run
+#   cd Order && ./mvnw spring-boot:run
+#
+# Or use the legacy Docker setup by checking git history if containerized deployment is needed.
+
 services:
-  # MongoDB for User Service
-  mongodb:
-    image: mongo:7.0
-    container_name: ms_mongodb
-    ports:
-      - "27018:27017"
-    environment:
-      MONGO_INITDB_DATABASE: ms_user_db
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - ecom-network
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost/test --quiet
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # MySQL for Product Service
-  mysql:
-    image: mysql:8.0
-    container_name: ms_mysql
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: ms_product_db
-      MYSQL_ROOT_HOST: '%'
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - ecom-network
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # PostgreSQL for Order Service
-  postgres:
-    image: postgres:18
-    container_name: ms_postgres
-    ports:
-      - "5434:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: ms_order_db
-    volumes:
-      - postgres_data:/var/lib/postgresql
-    networks:
-      - ecom-network
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # User Service
+  # User Service - connects to localhost MongoDB
   user-service:
     build:
       context: ./User
@@ -66,18 +23,13 @@ services:
     ports:
       - "8082:8082"
     environment:
-      DB_HOST: mongodb
+      DB_HOST: host.docker.internal
       DB_PORT: 27017
       DB_DATABASE: ms_user_db
-      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/ms_user_db
-    depends_on:
-      mongodb:
-        condition: service_healthy
-    networks:
-      - ecom-network
+    network_mode: bridge
     restart: unless-stopped
 
-  # Product Service
+  # Product Service - connects to localhost MySQL
   product-service:
     build:
       context: ./Product
@@ -86,19 +38,15 @@ services:
     ports:
       - "8081:8081"
     environment:
-      DB_HOST: mysql
+      DB_HOST: host.docker.internal
       DB_PORT: 3306
       DB_NAME: ms_product_db
       DB_USERNAME: root
       DB_PASSWORD: 1234
-    depends_on:
-      mysql:
-        condition: service_healthy
-    networks:
-      - ecom-network
+    network_mode: bridge
     restart: unless-stopped
 
-  # Order Service
+  # Order Service - connects to localhost PostgreSQL
   order-service:
     build:
       context: ./Order
@@ -107,23 +55,10 @@ services:
     ports:
       - "8083:8083"
     environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
+      DB_HOST: host.docker.internal
+      DB_PORT: 5433
       DB_NAME: ms_order_db
       DB_USERNAME: postgres
       DB_PASSWORD: 1234
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - ecom-network
+    network_mode: bridge
     restart: unless-stopped
-
-volumes:
-  mongodb_data:
-  mysql_data:
-  postgres_data:
-
-networks:
-  ecom-network:
-    driver: bridge

@@ -1,0 +1,29 @@
+spring:
+  mongodb:
+    host: localhost
+    database: ms_user_db
+    port: 27017
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, loggers, beans, shutdown
+
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+
+info:
+  app:
+    name: User
+    version: 0.0.1
+    owner: Saddab
+
+server:
+  port: 8082

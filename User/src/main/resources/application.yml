@@ -1,33 +1,6 @@
 spring:
   application:
-    name: User
+    name: user
+  config:
+    import: optional:configserver:http://localhost:8888
 
-
-  mongodb:
-    host: ${DB_HOST:mongodb}
-    database: ${DB_DATABASE:ms_user_db}
-    port: ${DB_PORT:27017}
-
-management:
-  info:
-    env:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: health, info, metrics, loggers, beans, shutdown
-
-  endpoint:
-    health:
-      show-details: always
-    shutdown:
-      enabled: true
-
-info:
-  app:
-    name: User
-    version: 0.0.1
-    owner: Saddab
-
-server:
-  port: 8082
