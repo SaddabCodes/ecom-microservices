@@ -7,6 +7,27 @@ spring:
     config:
       server:
         native:
-          search-locations: classpath:/config
+          search-locations: file:///C:\Spring-Project\ecom-microservices\Config_Server\src\main\resources\config
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
 server:
   port: 8888
+
+management:
+  endpoint:
+    busrefresh:
+      access: unrestricted
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+
+  endpoints:
+    web:
+      exposure:
+        include: "*"

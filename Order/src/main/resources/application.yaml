@@ -3,3 +3,8 @@ spring:
     name: order
   config:
     import: optional:configserver:http://localhost:8888
+
+management:
+  endpoint:
+    busrefresh:
+      access: unrestricted

@@ -4,6 +4,13 @@ spring:
     username: root
     password: 1234
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+
   jpa:
     show-sql: true
     hibernate:
@@ -13,20 +20,18 @@ spring:
         format_sql: true
 
 management:
-  info:
-    env:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: health, info, metrics, loggers, beans, shutdown
-    #        include: "*"
-
   endpoint:
+    busrefresh:
+      access: unrestricted
     health:
       show-details: always
     shutdown:
       enabled: true
+
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 info:
   app:
