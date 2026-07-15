@@ -80,4 +80,10 @@ public class ProductService {
         product.setCategory(productRequest.getCategory());
         product.setImageUrl(productRequest.getImageUrl());
     }
+
+    public Optional<ProductResponse> getProductById(String id) {
+        return productRepository.findByIdAndActiveTrue(Long.valueOf(id))
+                .map(product -> mapToProductResponse(product));
+
+    }
 }
