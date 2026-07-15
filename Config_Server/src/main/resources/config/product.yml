@@ -5,10 +5,7 @@ spring:
     password: 1234
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    enabled: false
 
 
   jpa:
@@ -33,6 +30,10 @@ management:
       exposure:
         include: "*"
 
+  health:
+    rabbit:
+      enabled: false
+
 info:
   app:
     name: Product
@@ -41,8 +42,8 @@ info:
 
 eureka:
   client:
-  service-url:
-    defaultZone: http://localhost:8761/eureka
+    service-url:
+      defaultZone: http://localhost:8761/eureka
     register-with-eureka: true
     fetch-registry: true
 

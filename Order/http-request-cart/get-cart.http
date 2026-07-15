@@ -1,5 +1,5 @@
 ### GET CART
 GET http://localhost:8083/api/cart
-X-USER-ID: 1
+X-USER-ID: 2
 
 ###
