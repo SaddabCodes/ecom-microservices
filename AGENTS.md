@@ -1,43 +1,26 @@
-<!-- context7 -->
-Use Context7 MCP to fetch current documentation whenever the user asks about a library, framework, SDK, API, CLI tool, or cloud service -- even well-known ones like React, Next.js, Prisma, Express, Tailwind, Django, or Spring Boot. This includes API syntax, configuration, version migration, library-specific debugging, setup instructions, and CLI tool usage. Use even when you think you know the answer -- your training data may not reflect recent changes. Prefer this over web search for library docs.
-
-Do not use for: refactoring, writing scripts from scratch, debugging business logic, code review, or general programming concepts.
-
-## Steps
-
-1. Always start with `resolve-library-id` using the library name and the user's question, unless the user provides an exact library ID in `/org/project` format
-2. Pick the best match (ID format: `/org/project`) by: exact name match, description relevance, code snippet count, source reputation (High/Medium preferred), and benchmark score (higher is better). If results don't look right, try alternate names or queries (e.g., "next.js" not "nextjs", or rephrase the question). Use version-specific IDs when the user mentions a version
-3. `query-docs` with the selected library ID and the user's full question (not single words)
-4. Answer using the fetched docs
-<!-- context7 -->
-
----
-
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-This repository is a microservices workspace. It currently contains one Spring Boot service in `ecom-application/`, and additional services are expected to be added later as sibling directories at the repository root. Inside each service, application code lives under `src/main/java`, configuration under `src/main/resources`, and tests under `src/test/java`. For the current service, the base package is `com.sadcodes.ecomapplication`. Keep new feature packages grouped by responsibility, for example `controller`, `service`, `domain`, and `config`.
+This repository is a Spring microservices workspace. Root modules are `ecom-application/`, `Order/`, `Product/`, `User/`, `Config_Server/`, and `Eureka-Server/`. Each service follows the standard Maven layout: application code in `src/main/java`, configuration in `src/main/resources`, and tests in `src/test/java`. Keep code grouped by responsibility under each service package, such as `controller`, `services`, `repository`, `model`, `dto`, and `client`.
 
 ## Build, Test, and Development Commands
-Run commands from `ecom-application/`.
+Run commands from the service directory you are changing.
 
-- `./mvnw spring-boot:run` or `mvnw.cmd spring-boot:run`: start the service locally.
-- `./mvnw test`: run the JUnit test suite.
+- `./mvnw spring-boot:run` or `mvnw.cmd spring-boot:run`: start a single service locally.
+- `./mvnw test` or `mvnw.cmd test`: run the test suite for that service.
 - `./mvnw clean package`: compile, test, and build the JAR in `target/`.
-- `./mvnw clean`: remove generated build output before a fresh build.
+- `./mvnw clean`: remove generated build output.
 
-Use the Maven wrapper instead of a system Maven install so everyone builds with the same toolchain.
+Use the Maven wrapper instead of a system Maven install.
 
 ## Coding Style & Naming Conventions
-Use standard Java formatting with 4-space indentation and one public class per file. Follow the existing package root `com.sadcodes.ecomapplication`. Class names use `PascalCase`, methods and fields use `camelCase`, and constants use `UPPER_SNAKE_CASE`. Prefer descriptive Spring component names such as `ProductController` and `OrderService`. Lombok is enabled; use it deliberately and avoid hiding non-trivial behavior behind annotations.
+Use standard Java formatting with 4-space indentation. Prefer one public class per file, `PascalCase` for classes, `camelCase` for methods and fields, and `UPPER_SNAKE_CASE` for constants. Keep Spring component names descriptive, for example `CartController`, `OrderService`, and `ProductServiceClient`. Use Lombok only when it keeps code clear.
 
 ## Testing Guidelines
-The project uses JUnit 5 with Spring Boot test support (`spring-boot-starter-webmvc-test`). Name test classes with the `*Tests` suffix and mirror the production package structure. Add focused unit or slice tests for new controllers and services; reserve `@SpringBootTest` for application wiring and integration coverage. Run `./mvnw test` before opening a pull request.
+The projects use JUnit 5 with Spring Boot test support. Name test classes with the `*Tests` suffix and mirror the production package structure. Prefer focused unit or slice tests for controllers, services, and repositories; reserve `@SpringBootTest` for wiring and integration checks. Run tests before opening a pull request.
 
 ## Commit & Pull Request Guidelines
-This branch currently has no commit history, so use a simple conventional format for all new commits: `<type>: <short imperative summary>`. Preferred types include `feat`, `fix`, `docs`, `refactor`, `test`, `build`, and `chore`. Examples: `feat: add product controller`, `docs: update local setup steps`, `refactor: simplify order service wiring`. When asked to generate a commit message for this repository, always return it in that format. Keep each commit scoped to one concern. Pull requests should include a brief summary, impacted modules, test evidence, and any configuration changes. Add request/response examples when API behavior changes.
+Use conventional commit messages in the form `<type>: <short imperative summary>`, such as `fix: restore inter-service communication for order service`. Keep each commit scoped to one change. Pull requests should include a short summary, impacted modules, and test evidence. Include request/response examples when API behavior changes.
 
-For repository-level changes, prefer subjects that describe the service or workspace clearly, for example `feat: initialize ecom-application service` or `docs: add microservices repository guidelines`.
-
-## Configuration & Environment
-Keep defaults in `application.yaml` safe for local development. Do not commit secrets, credentials, or environment-specific URLs. Prefer environment variables or externalized Spring configuration for sensitive values.
+## Configuration & Agent Notes
+Keep service defaults safe for local development. Do not commit secrets or environment-specific URLs. Prefer externalized Spring configuration for credentials and infrastructure endpoints. When working on framework or library behavior, check current official documentation before changing code.

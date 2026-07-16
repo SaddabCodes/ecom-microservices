@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-This is a microservices workspace for an e-commerce platform with three independent Spring Boot 4.0.6 services using Java 25. Each service runs on a separate port and manages its own data store.
+This is a microservices workspace for an e-commerce platform with Spring Boot 4.0.6/4.1.0 services using Java 21-25. Each service runs on a separate port and manages its own data store. Services discover and communicate with each other via Eureka service registry.
 
-### Services
+### Core Services
 
 **User Service** (`User/`)
 - Base package: `com.sadcodes.ecommerce.user`
@@ -27,6 +27,20 @@ This is a microservices workspace for an e-commerce platform with three independ
 - Port: 8083
 - Models: Order, CartItem, OrderItem with OrderStatus enum
 - Manages shopping carts and order processing
+- Uses service discovery to communicate with Product Service
+
+### Infrastructure Services
+
+**Eureka Server** (`Eureka-Server/`)
+- Service registry for service discovery
+- Port: 8761
+- Used by all microservices for dynamic service location and load balancing
+- Services auto-register on startup and heartbeat to stay healthy
+
+**Config Server** (`Config_Server/`)
+- Centralized configuration management (Spring Cloud Config)
+- Serves environment-specific application properties to microservices
+- Supports configuration refresh via Spring Cloud Bus
 
 ### Common Architecture
 
@@ -35,17 +49,37 @@ All services follow standard layered architecture: Controller → Service → Re
 - Lombok for boilerplate reduction
 - DTOs for API contracts (never expose domain models directly)
 - Hibernate auto-DDL enabled (`ddl-auto: update`)
+- Spring Cloud Netflix Eureka for service discovery
+- RestTemplate with @LoadBalanced for inter-service HTTP communication (Order ↔ Product)
 
 ## Development Commands
 
 All commands run from the respective service directory. Use Maven wrapper (not system Maven).
 
-**Start a service locally:**
+**Start infrastructure services first** (required for service discovery and configuration):
 ```bash
+cd Eureka-Server && ./mvnw spring-boot:run    # Start first - port 8761
+# In another terminal:
+cd Config_Server && ./mvnw spring-boot:run    # Optional for local dev - port 8888
+```
+
+**Start core microservices** (in separate terminals, or use `mvnw` directly):
+```bash
+cd User && ./mvnw spring-boot:run      # port 8082
+cd Product && ./mvnw spring-boot:run   # port 8081
+cd Order && ./mvnw spring-boot:run     # port 8083
+# Windows: mvnw.cmd spring-boot:run
+```
+
+**Quick reference - start all services from project root:**
+```bash
+# Terminal 1: Eureka (required)
+cd Eureka-Server && ./mvnw spring-boot:run
+
+# Terminal 2, 3, 4: Microservices (any order, Eureka must be running)
 cd User && ./mvnw spring-boot:run
 cd Product && ./mvnw spring-boot:run
 cd Order && ./mvnw spring-boot:run
-# Windows: mvnw.cmd spring-boot:run
 ```
 
 **Run all tests:**
@@ -69,6 +103,11 @@ cd Order && ./mvnw spring-boot:run
 - PostgreSQL on localhost:5433 (Order service database: `ms_order_db`, user: postgres/1234)
 
 All credentials and hosts are configurable via environment variables in `application.yaml`/`application.yml` files.
+
+**Interservice Communication:**
+- Order Service discovers Product Service via Eureka and uses load-balanced RestTemplate for API calls
+- All services automatically register with Eureka Server on startup
+- If Eureka is not running, services start but cannot discover each other (requests fail)
 
 ## Testing the API
 
