@@ -1,7 +1,6 @@
-package com.sadcodes.ecommerce.user.dto;
+package com.sadcodes.ecommerce.order.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.sadcodes.ecommerce.user.model.UserRole;
 import lombok.Data;
 
 @JsonPropertyOrder({"id", "firstName", "lastName", "email", "phone", "address"})

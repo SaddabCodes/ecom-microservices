@@ -11,17 +11,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.util.Optional;
 
 @Configuration
-class ProductServiceClientConfig {
+public class UserServiceClientConfig {
 
-    @Bean("productServiceClient")
-    public ProductServiceClient productServiceClient(@Qualifier("loadBalancedRestClientBuilder") RestClient.Builder restClientBuilder) {
-        RestClient restClient = restClientBuilder.baseUrl("http://product")
-                .defaultStatusHandler(HttpStatusCode::is4xxClientError, ((request, response) -> Optional.empty()))
+    @Bean("userServiceClient")
+    public UserServiceClient userServiceClient(@Qualifier("loadBalancedRestClientBuilder") RestClient.Builder restClientBuilder) {
+        RestClient restClient = restClientBuilder.baseUrl("http://user")
+                .defaultStatusHandler(HttpStatusCode::is4xxClientError,
+                        ((request, response) -> Optional.empty()))
                 .build();
 
         RestClientAdapter adapter = RestClientAdapter.create(restClient);
         HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(adapter).build();
 
-        return factory.createClient(ProductServiceClient.class);
+        return factory.createClient(UserServiceClient.class);
     }
 }

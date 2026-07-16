@@ -2,8 +2,10 @@ package com.sadcodes.ecommerce.order.services;
 
 
 import com.sadcodes.ecommerce.order.client.ProductServiceClient;
+import com.sadcodes.ecommerce.order.client.UserServiceClient;
 import com.sadcodes.ecommerce.order.dto.CartItemRequest;
 import com.sadcodes.ecommerce.order.dto.ProductResponse;
+import com.sadcodes.ecommerce.order.dto.UserResponse;
 import com.sadcodes.ecommerce.order.model.CartItem;
 import com.sadcodes.ecommerce.order.repository.CartItemRepository;
 import jakarta.transaction.Transactional;
@@ -20,6 +22,7 @@ public class CartService {
 
     private final CartItemRepository cartItemRepository;
     private final ProductServiceClient productServiceClient;
+    private final UserServiceClient userServiceClient;
 
     public boolean addToCart(String userId, CartItemRequest request) {
         // Look for product
@@ -30,6 +33,10 @@ public class CartService {
 
 
         if (productResponse.getStockQuantity() < request.getQuantity())
+            return false;
+
+        UserResponse userResponse = userServiceClient.getUserDetails(userId);
+        if (userResponse == null)
             return false;
 
 //

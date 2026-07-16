@@ -5,6 +5,6 @@ Content-Type: application/json
 X-USER-ID: 1
 
 {
-  "productId": 5,
+  "productId": 1,
   "quantity": 10
 }
