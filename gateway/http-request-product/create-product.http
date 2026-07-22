@@ -1,0 +1,13 @@
+### CREATE PRODUCT
+
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "The Midnight Library",
+  "description": "A novel by Matt Haig, exploring choices and regrets.",
+  "price": 899.00,
+  "stockQuantity": 520,
+  "category": "Books",
+  "imageUrl": "https://example.com/images/the-midnight-library.jpg"
+}

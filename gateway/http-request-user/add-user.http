@@ -1,0 +1,20 @@
+### ADD USER
+
+POST http://localhost:8080/api/users/add
+Content-Type: application/json
+
+{
+  "firstName": "Vikram",
+  "lastName": "Nair",
+  "email": "vikram.nair@example.com",
+  "phone": "+91-9345678901",
+  "address": {
+    "street": "9 Marine Drive",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "country": "India",
+    "zipcode": "400020"
+  }
+}
+
+###

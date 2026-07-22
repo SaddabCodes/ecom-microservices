@@ -1,0 +1,4 @@
+### GET USERS BY ID
+GET http://localhost:8080/api/users/6a241d6b726ab69a9d7bba9c
+
+###
