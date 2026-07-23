@@ -18,7 +18,7 @@ spring:
 
 management:
   endpoint:
-    busrefresh:
+    configrefresh:
       access: unrestricted
     health:
       show-details: always
@@ -30,6 +30,7 @@ management:
       exposure:
         include: "*"
 
+  
   health:
     rabbit:
       enabled: false
@@ -52,4 +53,17 @@ eureka:
 
 server:
   port: 8083
+
+# CIRCUIT BREAKER
+resilience4j:
+  circuitbreaker:
+    instances:
+      order:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5000
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
 
